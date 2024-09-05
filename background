@@ -1,0 +1,91 @@
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+
+const PromptPractice = () => {
+  const [expertise, setExpertise] = useState('');
+  const [role, setRole] = useState('');
+  const [audience, setAudience] = useState('');
+  const [feedback, setFeedback] = useState('');
+
+  const generateFeedback = () => {
+    let newFeedback = '';
+
+    if (expertise.length < 5) {
+      newFeedback += "Your expertise field is quite short. Try to be more specific about the area of expertise.\n";
+    } else if (expertise.length > 50) {
+      newFeedback += "Your expertise description is quite long. Try to be more concise.\n";
+    } else {
+      newFeedback += "Good job defining the expertise!\n";
+    }
+
+    if (role.length < 10) {
+      newFeedback += "Your role description is quite short. Try to elaborate on what the AI tool should do.\n";
+    } else if (role.includes("education") || role.includes("non-profit")) {
+      newFeedback += "Excellent job focusing on education or non-profit use cases in the role description!\n";
+    } else {
+      newFeedback += "Remember to focus on education or non-profit use cases in the role description.\n";
+    }
+
+    if (audience.length < 5) {
+      newFeedback += "Your audience description is quite short. Try to be more specific about who the AI is talking to.\n";
+    } else if (audience.includes("student") || audience.includes("teacher") || audience.includes("volunteer")) {
+      newFeedback += "Great job specifying an audience relevant to education or non-profit sectors!\n";
+    } else {
+      newFeedback += "Consider specifying an audience more relevant to education or non-profit sectors.\n";
+    }
+
+    setFeedback(newFeedback);
+  };
+
+  return (
+    <Card className="w-full max-w-2xl mx-auto">
+      <CardHeader>
+        <CardTitle>AI Prompt Practice for Education and Non-Profit Use Cases</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <div>
+            <label className="block mb-2 text-sm font-medium">You are an expert in:</label>
+            <Input
+              value={expertise}
+              onChange={(e) => setExpertise(e.target.value)}
+              placeholder="e.g., educational psychology, nonprofit management"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 text-sm font-medium">Your role is to:</label>
+            <Input
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              placeholder="e.g., design personalized learning plans, optimize fundraising strategies"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 text-sm font-medium">You are talking to:</label>
+            <Input
+              value={audience}
+              onChange={(e) => setAudience(e.target.value)}
+              placeholder="e.g., high school students, nonprofit volunteers"
+            />
+          </div>
+          <Button onClick={generateFeedback}>Get Feedback</Button>
+          {feedback && (
+            <Alert>
+              <AlertTitle>Feedback</AlertTitle>
+              <AlertDescription>
+                {feedback.split('\n').map((line, index) => (
+                  <p key={index}>{line}</p>
+                ))}
+              </AlertDescription>
+            </Alert>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default PromptPractice;
